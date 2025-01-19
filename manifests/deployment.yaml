@@ -1,54 +1,54 @@
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: flux-manager
-rules:
-  - apiGroups: ["rbac.authorization.k8s.io"]
-    resources: ["clusterrolebindings", "clusterroles"]
-    verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
+# ---
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRole
+# metadata:
+#   name: flux-manager
+# rules:
+#   - apiGroups: ["rbac.authorization.k8s.io"]
+#     resources: ["clusterrolebindings", "clusterroles"]
+#     verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
 
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: flux-manager-binding
-subjects:
-  - kind: ServiceAccount
-    name: flux-applier
-    namespace: flux-system  # Ensure this matches your service account namespace
-roleRef:
-  kind: ClusterRole
-  name: flux-manager
-  apiGroup: rbac.authorization.k8s.io
+# ---
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRoleBinding
+# metadata:
+#   name: flux-manager-binding
+# subjects:
+#   - kind: ServiceAccount
+#     name: flux-applier
+#     namespace: flux-system  # Ensure this matches your service account namespace
+# roleRef:
+#   kind: ClusterRole
+#   name: flux-manager
+#   apiGroup: rbac.authorization.k8s.io
 
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: nginx-pv
-spec:
-  capacity:
-    storage: 5Gi  # Specify the size of the volume
-  accessModes:
-    - ReadWriteOnce  # Define access mode
-  hostPath:
-    path: /mnt/data  # Change this to your desired path or use a cloud provider's storage class
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: nginx-pv
+# spec:
+#   capacity:
+#     storage: 5Gi  # Specify the size of the volume
+#   accessModes:
+#     - ReadWriteOnce  # Define access mode
+#   hostPath:
+#     path: /mnt/data  # Change this to your desired path or use a cloud provider's storage class
 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nginx-pvc
-  namespace: flux-system  # Ensure it's in the correct namespace
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 5Gi  # Must match the PV capacity
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: nginx-pvc
+#   namespace: flux-system  # Ensure it's in the correct namespace
+# spec:
+#   accessModes:
+#     - ReadWriteOnce
+#   resources:
+#     requests:
+#       storage: 5Gi  # Must match the PV capacity
 
----
+# ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
