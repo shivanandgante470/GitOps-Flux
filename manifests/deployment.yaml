@@ -69,13 +69,13 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-        volumeMounts:
-        - name: nginx-storage   # Reference to the volume defined below
-          mountPath: /usr/share/nginx/html   # Path inside the container where the volume will be mounted
-      volumes:
-      - name: nginx-storage   # Name must match volumeMounts name
-        persistentVolumeClaim:
-          claimName: nginx-pvc   # Reference to the PVC created above
+      #   volumeMounts:
+      #   - name: nginx-storage   # Reference to the volume defined below
+      #     mountPath: /usr/share/nginx/html   # Path inside the container where the volume will be mounted
+      # volumes:
+      # - name: nginx-storage   # Name must match volumeMounts name
+      #   persistentVolumeClaim:
+      #     claimName: nginx-pvc   # Reference to the PVC created above
 
 ---
 apiVersion: v1
