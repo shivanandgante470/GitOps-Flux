@@ -19,7 +19,14 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-
+        volumeMounts:
+        - name: nginx-storage   # Reference to the volume defined below
+          mountPath: /usr/share/nginx/html   # Path inside the container where the volume will be mounted
+      volumes:
+      - name: nginx-storage   # Name must match volumeMounts name
+        persistentVolumeClaim:
+          claimName: nginx-pvc   # Reference to the PVC created above
+          
 ---
 apiVersion: v1
 kind: Service
@@ -33,3 +40,30 @@ spec:
   - port: 80
     targetPort: 80
   type: LoadBalancer
+
+  ---
+  apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv
+spec:
+  capacity:
+    storage: 5Gi  # Specify the size of the volume
+  accessModes:
+    - ReadWriteOnce  # Define access mode
+  hostPath:
+    path: /mnt/data  # Change this to your desired path or use a cloud provider's storage class
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-pvc
+  namespace: flux-system  # Ensure it's in the correct namespace
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi  # Must match the PV capacity
+
