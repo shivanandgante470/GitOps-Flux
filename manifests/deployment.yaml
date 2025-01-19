@@ -2,24 +2,24 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: flux-pv-manager
+  name: flux-manager
 rules:
-  - apiGroups: [""]
-    resources: ["persistentvolumes", "persistentvolumeclaims"]
-    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: ["rbac.authorization.k8s.io"]
+    resources: ["clusterrolebindings", "clusterroles"]
+    verbs: ["get", "list", "watch", "create", "update", "delete", "patch"]
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: flux-pv-manager-binding
+  name: flux-manager-binding
 subjects:
   - kind: ServiceAccount
     name: flux-applier
     namespace: flux-system  # Ensure this matches your service account namespace
 roleRef:
   kind: ClusterRole
-  name: flux-pv-manager
+  name: flux-manager
   apiGroup: rbac.authorization.k8s.io
 
 ---
@@ -31,7 +31,7 @@ spec:
   capacity:
     storage: 5Gi  # Specify the size of the volume
   accessModes:
-    - ReadWriteMany   # Define access mode,ReadOnlyMany, ReadWriteOnce, ReadOnlyMany, ReadWriteOncePod 
+    - ReadWriteOnce  # Define access mode
   hostPath:
     path: /mnt/data  # Change this to your desired path or use a cloud provider's storage class
 
